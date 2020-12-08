@@ -88,13 +88,13 @@ func-test:
 func-vet:
 	cd $(CURRENT_FUNCTION) && go vet ./...
 
-func-build: func-verify
+func-build:
 	@echo Building image for $(CURRENT_FUNCTION)...
 	@( \
 		image_tag=$${TAG:-latest}; \
 		prefix="release-go-functions-"; \
 		[[ "$${image_tag}" = "$${prefix}"* ]] && image_tag="$${image_tag#$$prefix}"; \
-		image_name=gcr.io/kpt-functions/"$${CURRENT_FUNCTION}"; \
+		image_name=gcr.io/mengqiy-playground/"$${CURRENT_FUNCTION}"; \
 		image="$${image_name}":"$${image_tag}"; \
 		docker build -t "$${image}" -t "$${image_name}" -f "$${CURRENT_FUNCTION}"/Dockerfile "$${CURRENT_FUNCTION}"; \
 	)
@@ -105,7 +105,7 @@ func-push:
 		image_tag=$${TAG:-latest}; \
 		prefix="release-go-functions-"; \
 		[[ "$${image_tag}" = "$${prefix}"* ]] && image_tag="$${image_tag#$$prefix}"; \
-		image_name=gcr.io/kpt-functions/"$${CURRENT_FUNCTION}"; \
+		image_name=gcr.io/mengqiy-playground/"$${CURRENT_FUNCTION}"; \
 		image="$${image_name}":"$${image_tag}"; \
 		docker push "$${image_name}:latest"; \
 		docker push "$${image}"; \

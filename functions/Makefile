@@ -27,7 +27,7 @@ test: ## Run unit tests for all functions
 
 build: ## Build all function images. Variable 'TAG' is used to specify tag. 'latest' will be used if not set.
 	cd go && $(MAKE) TAG=$(TAG) build
-	cd ts && $(MAKE) TAG=$(TAG) build
+# 	cd ts && $(MAKE) TAG=$(TAG) build
 
 build-dev: ## Build all function images with tag 'dev'. This is used for local tests.
 	cd go && $(MAKE) build-dev
