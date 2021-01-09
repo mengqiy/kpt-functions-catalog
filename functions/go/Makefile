@@ -21,6 +21,8 @@ FUNCTIONS := \
 
 # Targets for running all function tests
 FUNCTION_TESTS := $(patsubst %,%-TEST,$(FUNCTIONS))
+
+FUNCTION_CHECKLICENSES := $(patsubst %,%-CHECKLICENSES,$(FUNCTIONS))
 # Targets to build functions
 FUNCTION_BUILDS := $(patsubst %,%-BUILD,$(FUNCTIONS))
 # Targets to push images
@@ -61,6 +63,29 @@ push: $(FUNCTION_PUSH) ## Push images to registry. WARN: This operation should o
 $(FUNCTION_PUSH):
 	$(MAKE) CURRENT_FUNCTION=$(subst -PUSH,,$@) func-push
 
+.PHONY: check-licenses
+check-licenses: $(FUNCTION_CHECKLICENSES)
+
+.PHONY: $(FUNCTION_CHECKLICENSES)
+$(FUNCTION_CHECKLICENSES):
+	$(MAKE) CURRENT_FUNCTION=$(subst -CHECKLICENSES,,$@) func-check-licenses
+
+# find or download go-licenses
+go-licenses:
+ifeq (, $(shell which go-licenses))
+	@{ \
+	set -e ;\
+	GO_LICENSES_TMP_DIR=$$(mktemp -d) ;\
+	cd $$GO_LICENSES_TMP_DIR ;\
+	go mod init tmp ;\
+	go get github.com/google/go-licenses ;\
+	rm -rf $$GO_LICENSES_TMP_DIR ;\
+	}
+GO_LICENSES=$(GOBIN)/go-licenses
+else
+GO_LICENSES=$(shell which go-licenses)
+endif
+
 # Recipes for individual function
 .PHONY: func-fix func-vet func-fmt func-test func-lint \
 	func-build func-push func-verify
@@ -82,6 +107,10 @@ func-test:
 
 func-vet:
 	cd $(CURRENT_FUNCTION) && go vet ./...
+
+func-check-licenses:
+	@echo Checking licenses for $(CURRENT_FUNCTION)...
+	cd $(CURRENT_FUNCTION) && $(GO_LICENSES) check .
 
 func-build: func-verify
 	@echo Building image for $(CURRENT_FUNCTION)...
