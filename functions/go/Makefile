@@ -71,7 +71,12 @@ $(FUNCTION_CHECKLICENSES):
 	$(MAKE) CURRENT_FUNCTION=$(subst -CHECKLICENSES,,$@) func-check-licenses
 
 go-licenses:
+ifeq (, $(shell which go-licenses))
 	../../scripts/install-go-licenses.sh
+	GO_LICENSES=$(GOBIN)/go-licenses
+else
+	GO_LICENSES=$(shell which go-licenses)
+endif
 
 # Recipes for individual function
 .PHONY: func-fix func-vet func-fmt func-test func-lint \
@@ -97,7 +102,7 @@ func-vet:
 
 func-check-licenses:
 	@echo Checking licenses for $(CURRENT_FUNCTION)...
-	cd $(CURRENT_FUNCTION) && go-licenses check .
+	cd $(CURRENT_FUNCTION) && $(GO_LICENSES) check .
 
 func-build: func-verify
 	@echo Building image for $(CURRENT_FUNCTION)...
