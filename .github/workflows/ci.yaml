@@ -64,6 +64,8 @@ jobs:
         make unit-test-go
     - name: Check licenses
       run: |
+        which go-licenses
+        echo $PATH
         cd functions/go
         make check-licenses
 
