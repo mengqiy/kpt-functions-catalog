@@ -64,18 +64,18 @@ $(FUNCTION_PUSH):
 	$(MAKE) CURRENT_FUNCTION=$(subst -PUSH,,$@) func-push
 
 .PHONY: check-licenses
-check-licenses: $(FUNCTION_CHECKLICENSES)
+check-licenses: install-go-licenses $(FUNCTION_CHECKLICENSES)
 
 .PHONY: $(FUNCTION_CHECKLICENSES)
 $(FUNCTION_CHECKLICENSES):
 	$(MAKE) CURRENT_FUNCTION=$(subst -CHECKLICENSES,,$@) func-check-licenses
 
-go-licenses:
+install-go-licenses:
 ifeq (, $(shell which go-licenses))
 	../../scripts/install-go-licenses.sh
-	GO_LICENSES=$(GOPATH)/bin/go-licenses
+GO_LICENSES=$(GOPATH)/bin/go-licenses
 else
-	GO_LICENSES=$(shell which go-licenses)
+GO_LICENSES=$(shell which go-licenses)
 endif
 
 # Recipes for individual function
