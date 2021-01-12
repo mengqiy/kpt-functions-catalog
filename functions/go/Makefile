@@ -70,21 +70,8 @@ check-licenses: $(FUNCTION_CHECKLICENSES)
 $(FUNCTION_CHECKLICENSES):
 	$(MAKE) CURRENT_FUNCTION=$(subst -CHECKLICENSES,,$@) func-check-licenses
 
-# find or download go-licenses
 go-licenses:
-ifeq (, $(shell which go-licenses))
-	@{ \
-	set -e ;\
-	GO_LICENSES_TMP_DIR=$$(mktemp -d) ;\
-	cd $$GO_LICENSES_TMP_DIR ;\
-	go mod init tmp ;\
-	go get github.com/google/go-licenses ;\
-	rm -rf $$GO_LICENSES_TMP_DIR ;\
-	}
-GO_LICENSES=$(GOBIN)/go-licenses
-else
-GO_LICENSES=$(shell which go-licenses)
-endif
+	../../scripts/install-go-licenses.sh
 
 # Recipes for individual function
 .PHONY: func-fix func-vet func-fmt func-test func-lint \
@@ -110,7 +97,7 @@ func-vet:
 
 func-check-licenses:
 	@echo Checking licenses for $(CURRENT_FUNCTION)...
-	cd $(CURRENT_FUNCTION) && $(GO_LICENSES) check .
+	cd $(CURRENT_FUNCTION) && go-licenses check .
 
 func-build: func-verify
 	@echo Building image for $(CURRENT_FUNCTION)...
