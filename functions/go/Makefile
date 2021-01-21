@@ -60,7 +60,7 @@ push: $(FUNCTION_PUSH) ## Push images to registry. WARN: This operation should o
 
 .PHONY: $(FUNCTION_PUSH)
 $(FUNCTION_PUSH):
-	$(MAKE) CURRENT_FUNCTION=$(subst -PUSH,,$@) func-push
+	$(MAKE) CURRENT_FUNCTION=$(subst -PUSH,,$@) TAG=$(TAG) func-push
 
 .PHONY: check-licenses
 check-licenses: install-go-licenses $(FUNCTION_CHECKLICENSES)
@@ -105,8 +105,8 @@ func-check-licenses:
 
 func-build: func-verify
 	@echo Building image for $(CURRENT_FUNCTION)...
-	../../scripts/go-function-build.sh
+	../../scripts/go-function-release.sh build
 
 func-push:
 	@echo Pushing image $(CURRENT_FUNCTION)...
-	../../scripts/go-function-push.sh
+		../../scripts/go-function-release.sh push
