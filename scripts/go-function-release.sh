@@ -43,7 +43,8 @@ source ${scripts_dir}/git-tag-parser.sh
 
 DEV_TAG=dev
 versions=$(get_versions "${TAG}")
-GCR_REGISTRY=${GCR_REGISTRY:-gcr.io/kpt-functions}
+DEFAULT_GCR=${DEFAULT_GCR:-gcr.io/kpt-fn-contrib}
+GCR_REGISTRY=${GCR_REGISTRY:-${DEFAULT_GCR}}
 
 cd "${scripts_dir}"/../functions/go
 
