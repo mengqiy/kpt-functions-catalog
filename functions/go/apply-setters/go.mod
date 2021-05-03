@@ -1,4 +1,4 @@
-module github.com/GoogleContainerTools/kpt-functions-catalog/functions/go/apply-setters
+module github.com/mengqiy/kpt-functions-catalog/functions/go/apply-setters
 
 go 1.15
 
